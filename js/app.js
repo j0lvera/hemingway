@@ -19,6 +19,13 @@
 
         grande.bind(doc.getElementsByClassName('editor')[0]);
 
+        s.editor.addEventListener('paste', function(e) {
+          setTimeout(function() {
+            s.editor.innerHTML = app.stripHTML(s.editor.innerHTML);
+            app.placeCaretAtEnd(s.editor);
+          }, 0);
+        });
+
         // app.onWriting(function(content) {
         //   console.log(app.getTotalSentences(content));
         // });
@@ -42,21 +49,39 @@
           s.sentences.innerHTML = totalSentences;
           s.flesch.innerHTML = app.getFleschReadingEase(totalWords, totalSentences, totalSyllables);
           s.gradeLevel.innerHTML = app.getFleschKincaidGradeLevelFormula(totalWords, totalSentences, totalSyllables);
-
-          // test
-          // doc.getElementsByClassName('content-result')[0].innerHTML = content.replace(/(<([^>]+)>)/ig,"");
-          doc.getElementsByClassName('content-result')[0].innerHTML = content.replace(/<(\/?[a-zA-Z0-9]+) ?(.*?)>/g, '<$1>');
         });
       },
 
       onWriting: function(callback) {
         s.editor.onkeyup = function() {
-          callback(s.editor.innerHTML);
+          callback(s.editor.innerText.trim());
         };
+      },
+
+      stripHTML: function(html) {
+        return html.replace(/<(\/?[a-zA-Z0-9]+)(.*?)>/g, '<$1>');
       },
 
       logWriting: function(content) {
         console.log(content);
+      },
+
+      // http://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser
+      placeCaretAtEnd: function(el) {
+        el.focus();
+        if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
+          var range = document.createRange();
+          range.selectNodeContents(el);
+          range.collapse(false);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        } else if (typeof document.body.createTextRange != 'undefined') {
+          var textRange = document.body.createTextRange();
+          textRange.moveToelementText(el);
+          textRange.collapse(false);
+          textRange.select();
+        }
       },
 
       getTotalWords: function(text) {
@@ -64,7 +89,7 @@
           throw 'Need some text as argument.';
         } 
 
-        var words = text.split(/[.:;?! !@#$%^&*()]+/),
+        var words = text.split(/[.:;?! \n\r\s@#$%^&*()]+/),
           count = 0;
 
         words.forEach(function(value) {
