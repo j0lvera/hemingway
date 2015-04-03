@@ -1,0 +1,14 @@
+{
+  "name": "grande",
+  "homepage": "https://github.com/mduvall/grande.js",
+  "_release": "2053aa45e2",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "2053aa45e2c6c8ed9c49501418c0ff497e842a73"
+  },
+  "_source": "git://github.com/mduvall/grande.js.git",
+  "_target": "*",
+  "_originalSource": "grande",
+  "_direct": true
+}
