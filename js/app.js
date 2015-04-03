@@ -44,7 +44,8 @@
           s.gradeLevel.innerHTML = app.getFleschKincaidGradeLevelFormula(totalWords, totalSentences, totalSyllables);
 
           // test
-          doc.getElementsByClassName('content-result')[0].innerHTML = content.replace(/(<([^>]+)>)/ig,"");
+          // doc.getElementsByClassName('content-result')[0].innerHTML = content.replace(/(<([^>]+)>)/ig,"");
+          doc.getElementsByClassName('content-result')[0].innerHTML = content.replace(/<(\/?[a-zA-Z0-9]+) ?(.*?)>/g, '<$1>');
         });
       },
 

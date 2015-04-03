@@ -18,3 +18,7 @@
   outline: none;
   border: none;
 }
+
+.content-result {
+  background-color: #eee;
+}
