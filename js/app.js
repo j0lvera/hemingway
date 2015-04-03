@@ -43,6 +43,7 @@
           s.flesch.innerHTML = app.getFleschReadingEase(totalWords, totalSentences, totalSyllables);
           s.gradeLevel.innerHTML = app.getFleschKincaidGradeLevelFormula(totalWords, totalSentences, totalSyllables);
 
+          // test
           doc.getElementsByClassName('content-result')[0].innerHTML = content.replace(/(<([^>]+)>)/ig,"");
         });
       },
