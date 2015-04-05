@@ -15,10 +15,11 @@
 
       init: function() {
         s = app.settings;
-        app.onWriting(app.getTotalWords);
 
+        // Bind grande.js editor
         grande.bind(doc.getElementsByClassName('editor')[0]);
 
+        // Trigger app when user paste content
         s.editor.addEventListener('paste', function(e) {
           setTimeout(function() {
             s.editor.innerHTML = app.stripHTML(s.editor.innerHTML);
@@ -26,19 +27,7 @@
           }, 0);
         });
 
-        // app.onWriting(function(content) {
-        //   console.log(app.getTotalSentences(content));
-        // });
-
-        // app.onWriting(function(content) {
-        //   console.log(app.getTotalSyllables(content));
-        // });
-
-        // app.onWriting(function(content) {
-        //   console.log(app.getTotalWords(content));
-        // });
-
-
+        // Run basic functions
         app.onWriting(function(content) {
           var totalWords = app.getTotalWords(content);
           var totalSentences = app.getTotalSentences(content);
@@ -59,17 +48,17 @@
       },
 
       stripHTML: function(html) {
+        if (!html) { throw "HTML missing."; }
+
         return html.replace(/<(\/?[a-zA-Z0-9]+)(.*?)>/g, '<$1>');
       },
 
-      logWriting: function(content) {
-        console.log(content);
-      },
+      logWriting: function(content) {},
 
       // http://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser
       placeCaretAtEnd: function(el) {
         el.focus();
-        if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
+        if (typeof window.getSelection !== 'undefined' && typeof document.createRange !== 'undefined') {
           var range = document.createRange();
           range.selectNodeContents(el);
           range.collapse(false);
@@ -85,39 +74,21 @@
       },
 
       getTotalWords: function(text) {
-        if (!text) {
-          throw 'Need some text as argument.';
-        } 
+        if (!text) { throw 'Need some text as argument.'; }
 
-        var words = text.split(/[.:;?! \n\r\s@#$%^&*()]+/),
-          count = 0;
-
-        words.forEach(function(value) {
-          if (value) {
-            count++;
-          } 
-        });
-        // return text.split(/[.:;?! !@#$%^&*()]+/).length;
-        // return text.split(' ');
-        return count;
+        return text.trim().split(' ').filter(Boolean).length;
       },
 
       getTotalSentences: function(text) {
-        if (!text) {
-          throw 'Need some text as argument.';
-        }
+        if (!text) { throw 'Need some text as argument.'; }
 
-        // var matches = text.match(/\.\s/g);
-        // return matches.length > 1 ? matches.length + 2 : 1;
-        return text.split(/[.:;?!]/).length;
+        return text.trim().split(/[.?!]/).filter(Boolean).length;
       },
 
       getTotalSyllables: function(text) {
-        if (!text) {
-          throw 'Need some words as argument.';
-        }
+        if (!text) { throw 'Need some words as argument.'; }
 
-        var words = text.split(' '),
+        var words = text.split(' ').filter(Boolean),
           totalSyllables = 0;
         
         // A method to count the number of syllables in a word
@@ -162,7 +133,7 @@
       },
 
       getFleschReadingEase: function(totalWords, totalSentences, totalSyllables) {
-        var score = 206.835 - (1.015 * (totalWords / totalSentences)) - (84.6 * (totalSyllables / totalWords));
+        var score = 206.835 - 1.015 * (totalWords / totalSentences) - 84.6 * (totalSyllables / totalWords);
 
         return score.toFixed(2);
       },
