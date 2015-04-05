@@ -1,5 +1,6 @@
 # Links:
 
+- https://github.com/cgiffard/TextStatistics.js/blob/master/index.js
 - http://shiffman.net/teaching/a2z/week1/
 - http://johngarger.com/articles/writing/determine-readability-using-the-flesch-reading-ease
 - http://countwordsworth.com/syllables
