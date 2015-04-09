@@ -11,19 +11,32 @@
 </head>
 <body>
   <div class="app">
-    <h1>A better Hemingway App</h1>
+    <div class="row">
+      <div class="main">
+        <h1>A better Hemingway App</h1>
 
-    <article class="editor" contentEditable="true"></article> <!-- .editor -->
+        <div class="results">
+          <article class="editor" contentEditable="true"></article> <!-- .editor -->
+          <div class="content-result"></div>
+        </div> <!-- .results -->
 
-    <ul>
-      <li>Total Syllables: <span class="syllables"></span></li>
-      <li>Total Words: <span class="words"></span></li>
-      <li>Total Sentences: <span class="sentences"></span></li>
-      <li>Flesch Index: <span class="flesch"></span></li>
-      <li>Flesch-Kincaid Grade Level Index: <span class="grade-level"></span></li>
-    </ul>
+        
+      </div> <!-- .main -->
 
-    <div class="content-result"></div>
+      <aside class="sidebar">
+        <ul>
+          <li><em>Total Letters:</em> <strong><span class="letters"></span></strong></li>
+          <li><em>Total Chars:</em> <strong><span class="chars"></span></strong></li>
+          <li><em>Total Syllables:</em> <strong><span class="syllables"></span></strong></li>
+          <li><em>Total Words:</em> <strong><span class="words"></span></strong></li>
+          <li><em>Total Sentences:</em> <strong><span class="sentences"></span></strong></li>
+          <li><em>Automated Readability Index:</em> <strong><span class="automated"></span></strong></li>
+          <li><em>Flesch Index:</em> <strong><span class="flesch"></span></strong></li>
+
+          <li><em>Flesch-Kincaid Grade Level Index:</em> <strong><span class="grade-level"></span></strong></li>
+        </ul>
+      </aside> <!-- .sidebar -->
+    </div> <!-- .row -->
   </div> <!-- .app -->
 
   <!-- <script src="https://code.jquery.com/jquery-2.1.3.js"></script> -->

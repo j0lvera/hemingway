@@ -7,10 +7,14 @@
       settings: {
         editor: doc.getElementsByClassName('editor')[0],
         syllables: doc.getElementsByClassName('syllables')[0],
+        letters: doc.getElementsByClassName('letters')[0],
+        chars: doc.getElementsByClassName('chars')[0],
         words: doc.getElementsByClassName('words')[0],
         sentences: doc.getElementsByClassName('sentences')[0],
         flesch: doc.getElementsByClassName('flesch')[0],
-        gradeLevel: doc.getElementsByClassName('grade-level')[0]
+        automated: doc.getElementsByClassName('automated')[0],
+        gradeLevel: doc.getElementsByClassName('grade-level')[0],
+        contentResult: doc.getElementsByClassName('content-result')[0]
       },
 
       init: function() {
@@ -29,15 +33,22 @@
 
         // Run basic functions
         app.onWriting(function(content) {
-          var totalWords = app.getTotalWords(content);
-          var totalSentences = app.getTotalSentences(content);
-          var totalSyllables = app.getTotalSyllables(content);
+          var totalWords = app.getTotalWords(content),
+            totalSentences = app.getTotalSentences(content),
+            totalSyllables = app.getTotalSyllables(content),
+            totalChars = app.getTotalChars(content),
+            totalLetters = app.getTotalLetters(content);
+
+          // app.highlight(content);
 
           s.syllables.innerHTML = totalSyllables;
+          s.letters.innerHTML = totalLetters;
+          s.chars.innerHTML = totalChars;
           s.words.innerHTML = totalWords;
           s.sentences.innerHTML = totalSentences;
           s.flesch.innerHTML = app.getFleschReadingEase(totalWords, totalSentences, totalSyllables);
           s.gradeLevel.innerHTML = app.getFleschKincaidGradeLevelFormula(totalWords, totalSentences, totalSyllables);
+          s.automated.innerHTML = app.getAutomatedReadabilityIndex(totalWords, totalSentences, totalLetters);
         });
       },
 
@@ -55,6 +66,28 @@
 
       logWriting: function(content) {},
 
+      highlight: function(content) {
+        // Build sentences and push to array then push to text
+        var text = content.split(' ');
+          // sentences = content.trim().split(/[.?!]/).filter(Boolean);
+
+        text.forEach(function(value, key) {
+          if (value === 'tototo') {
+            text[key] = '<span class="testing">tototo</span>';
+          }
+        });
+
+        // Creating tokenized sentences
+        var sentences = text.join(' ').split(/[.?!]/);
+        var result = [];
+
+        sentences.forEach(function(value, key) {
+          result.push('<span class="token-sentence">' + value + '.</span>');
+        });
+
+        s.contentResult.innerHTML = result.join(' ');
+      },
+
       // http://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser
       placeCaretAtEnd: function(el) {
         el.focus();
@@ -71,6 +104,18 @@
           textRange.collapse(false);
           textRange.select();
         }
+      },
+
+      getTotalChars: function(text) {
+        if (!text) { throw 'Need some text as argument.'; }
+
+        return text.length;
+      },
+
+      getTotalLetters: function(text) {
+        if (!text) { throw 'Need some text as argument.'; }
+
+        return text.replace(/[^a-zA-Z]/g, '').length;
       },
 
       getTotalWords: function(text) {
@@ -142,6 +187,12 @@
         var score = 0.39 * (totalWords / totalSentences) + 11.8 * (totalSyllables / totalWords) - 15.59;
 
         return score.toFixed(2);
+      },
+
+      getAutomatedReadabilityIndex: function(totalWords, totalSentences, totalLetters) {
+        var score = Math.round(4.71 * (totalLetters / totalWords) + 0.5 * (totalWords / totalSentences) - 21.43);
+
+        return score;
       }
     };
 

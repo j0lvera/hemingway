@@ -1,17 +1,32 @@
+/* Base */
+h1 {
+  font-size: 1.2em;
+  text-align: center;
+}
+
 .app {
-  width: 45em;
-  margin: 5em auto 0 auto;
+  width: 65em;
+  margin: 1em auto 0 auto;
   font-family: 'PT Mono', monospace;
   font-size: 18px;
 }
 
+.content-result,
 .editor {
   padding: 0.5em 1em;
   min-height: 20em;
   color: #333;
-  background-color: #eee;
+  background-color: transparent;
   outline: none;
   border: none;
+}
+
+.editor {
+  z-index: 50;
+}
+
+.content-result p {
+  background-color: red;
 }
 
 .editor:hover {
@@ -21,4 +36,34 @@
 
 .content-result {
   background-color: #eee;
+}
+
+/* Main */
+.main {
+  float: left;
+  width: 55%;
+}
+
+/* Sidebar */
+.sidebar {
+  float: left;
+  width: 40%;
+  margin-top: 6em;
+}
+
+/* Results */
+.results {
+  position: relative;
+}
+
+.content-result,
+.editor {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.testing {
+  background-color: orange;
 }
