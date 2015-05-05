@@ -26,7 +26,8 @@ h1 {
 }
 
 .content-result p {
-  background-color: red;
+  margin-top: 0;
+  margin-bottom: 21px;
 }
 
 .editor:hover {
@@ -62,6 +63,10 @@ h1 {
   width: 100%;
   top: 0;
   left: 0;
+}
+
+.content-result {
+  left: 700px !important;
 }
 
 .testing {

@@ -39,7 +39,7 @@
             totalChars = app.getTotalChars(content),
             totalLetters = app.getTotalLetters(content);
 
-          // app.highlight(content);
+          app.highlight(app.stripHTML(s.editor.innerHTML));
 
           s.syllables.innerHTML = totalSyllables;
           s.letters.innerHTML = totalLetters;
@@ -54,7 +54,7 @@
 
       onWriting: function(callback) {
         s.editor.onkeyup = function() {
-          callback(s.editor.innerText.trim());
+          callback(s.editor.textContent.trim());
         };
       },
 
@@ -67,25 +67,52 @@
       logWriting: function(content) {},
 
       highlight: function(content) {
-        // Build sentences and push to array then push to text
+        // ## TODO:
+        // - I need to separate the tokenize functions to a separate
+        // function
         var text = content.split(' ');
-          // sentences = content.trim().split(/[.?!]/).filter(Boolean);
 
-        text.forEach(function(value, key) {
-          if (value === 'tototo') {
-            text[key] = '<span class="testing">tototo</span>';
-          }
+        // // We look through each word to see if it matches a specific word,
+        // // then it apply a `span` element with a class.
+        // text.forEach(function(value, key) {
+        //   // This only work with one word.
+        //   // Also this doesn't work if the word has a dot in the end like 
+        //   // "tototo."
+        //   if (value === 'tototo') {
+        //     text[key] = '<span class="testing">tototo</span>';
+        //   }
+        // });
+        
+        // This is what works best, for future reference and use an array as regex
+        // see this link: http://stackoverflow.com/questions/28280920/convert-array-of-words-strings-to-regex-and-use-it-to-get-matches-on-a-string
+        var regex = /tototo|yoyoyo/gi,
+            replacer = function(value) {  return '<span class="testing">' + value + '</span>'; };
+
+        text = text.join(' ').replace(regex, replacer).split(' ');
+
+        // When we write on the `contentEditable` element, each paragraph
+        // is separated with `<br><br>`, we part form there to build the
+        // paragraphs and wrap them in the next function.
+        var paragraphs = text.join(' ').split('<br><br>').filter(Boolean),
+          paragraphsTokenized = [];
+
+        // Wrap paragraphs with `p` tags.
+        paragraphs.forEach(function(value) {
+          var sentences = value.trim().split(/[\.!?][ ]?/).filter(Boolean),
+            sentencesTokenized = [];
+
+          // Convert sentences in `span` elements with the `.token-sentence` class.
+          sentences.forEach(function(sentence) {
+            sentencesTokenized.push('<span class="token-sentence">' + sentence + '. </span>');
+          });
+
+          paragraphsTokenized.push('<p>' + sentencesTokenized.join('') + '</p>'); 
         });
 
-        // Creating tokenized sentences
-        var sentences = text.join(' ').split(/[.?!]/);
-        var result = [];
-
-        sentences.forEach(function(value, key) {
-          result.push('<span class="token-sentence">' + value + '.</span>');
-        });
-
-        s.contentResult.innerHTML = result.join(' ');
+        // Without the last `substring` a dot appear at the end, I need to
+        // figure a better fix for this.
+        var result = paragraphsTokenized.join('');
+        s.contentResult.innerHTML = result.substring(0, result.length-1);
       },
 
       // http://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser
